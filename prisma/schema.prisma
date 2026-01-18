@@ -1,0 +1,66 @@
+
+generator client {
+  provider        = "prisma-client"
+  output          = "../prisma/generated/prisma"
+  moduleFormat    = "cjs"
+}
+datasource db {
+  provider = "sqlite"
+}
+
+enum ROLES {
+  USER
+  ADMIN
+}
+
+enum ItemType {
+  SKIN
+  CASE
+  STICKER
+  GRAFFITI
+  AGENT
+}
+
+enum SkinCondition {
+  FACTORY_NEW
+  MINIMAL_WEAR
+  FIELD_TESTED
+  WELL_WORN
+  BATTLE_SCARRED
+}
+
+
+model User {
+  id    Int     @default(autoincrement()) @id
+  avatar String
+  email String  @unique
+  password String
+  name  String
+  role ROLES
+  verified Boolean
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  skins Skin[]
+}
+
+model Skin {
+  id          Int           @default(autoincrement()) @id
+  name        String        
+  weapon      String        
+  itemType    ItemType      @default(SKIN) 
+  condition   SkinCondition?
+  price       Float         
+  iamgeUrl    String
+  isAvailable Boolean       @default(true) 
+  float       Float?       
+  isStatTrak  Boolean       @default(false) 
+  
+  sellerId    Int           
+  seller      User          @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  
+  
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}

@@ -5,6 +5,8 @@ import {
   Query,
   ParseIntPipe,
   HttpCode,
+  NotFoundException,
+  HttpStatus,
 } from "@nestjs/common";
 import { SkinService } from "./skin.service";
 import type { FilterSkinDto } from "./dto/filter.dto";
@@ -14,14 +16,20 @@ export class SkinController {
   constructor(private readonly skinService: SkinService) {}
 
   @Get()
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   async findAll(@Query() filters: FilterSkinDto) {
     return this.skinService.findAll(filters);
   }
 
   @Get(":id")
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   async findOne(@Param("id", ParseIntPipe) id: number) {
-    return this.skinService.findOne(id);
+    const skin = await this.skinService.findOne(id);
+
+    if (!skin) {
+      throw new NotFoundException(`Скин с ID ${id} не найден`);
+    }
+
+    return skin;
   }
 }

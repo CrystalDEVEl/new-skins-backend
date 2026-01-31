@@ -32,12 +32,12 @@ enum SkinCondition {
 
 model User {
   id    Int     @default(autoincrement()) @id
-  avatar String
+  avatar String?
   email String  @unique
   password String
   name  String
   role ROLES
-  verified Boolean
+  verified Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

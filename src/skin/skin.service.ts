@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { FilterSkinDto } from "./dto/filter.dto";
 import { SkinCondition } from "../../prisma/generated/prisma/enums";
@@ -64,7 +64,7 @@ export class SkinService {
   }
 
   async findOne(id: number) {
-    return this.prisma.skin.findUnique({
+    const skin = await this.prisma.skin.findUnique({
       where: {
         id,
       },
@@ -77,5 +77,11 @@ export class SkinService {
         },
       },
     });
+
+    if (!skin) {
+      throw new NotFoundException(`Скин с ID ${id} не найден`);
+    }
+
+    return skin;
   }
 }

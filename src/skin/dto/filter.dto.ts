@@ -28,6 +28,7 @@ export class FilterSkinDto {
   @IsIn(["Y", "N"])
   isAvailable?: "Y" | "N";
 
+  @IsOptional()
   @IsString()
   name?: string;
 }

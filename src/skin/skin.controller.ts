@@ -5,7 +5,6 @@ import {
   Query,
   ParseIntPipe,
   HttpCode,
-  NotFoundException,
   HttpStatus,
 } from "@nestjs/common";
 import { SkinService } from "./skin.service";
@@ -24,12 +23,6 @@ export class SkinController {
   @Get(":id")
   @HttpCode(HttpStatus.OK)
   async findOne(@Param("id", ParseIntPipe) id: number) {
-    const skin = await this.skinService.findOne(id);
-
-    if (!skin) {
-      throw new NotFoundException(`Скин с ID ${id} не найден`);
-    }
-
-    return skin;
+    return this.skinService.findOne(id);
   }
 }
